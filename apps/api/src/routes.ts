@@ -1556,8 +1556,9 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
   });
 
   app.post<{ Body: ComparisonPreviewBody }>("/v1/comparisons/preview", async (request, reply) => {
-    const designValidation = validateDesignSnapshot(request.body.designSnapshot);
-    const pageValidation = validatePageSnapshot(request.body.pageSnapshot);
+    const body = request.body as ComparisonPreviewBody;
+    const designValidation = validateDesignSnapshot(body.designSnapshot);
+    const pageValidation = validatePageSnapshot(body.pageSnapshot);
 
     if (!designValidation.valid || !pageValidation.valid) {
       return reply.status(400).send({
@@ -1568,9 +1569,9 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
     }
 
     const comparison: ComparisonResult = compareDesignToPage(
-      request.body.designSnapshot,
-      request.body.pageSnapshot,
-      request.body.tolerancePx ?? 5
+      body.designSnapshot,
+      body.pageSnapshot,
+      body.tolerancePx ?? 5
     );
 
     return {
@@ -1580,6 +1581,7 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
   });
 
   app.post<{ Body: QaCheckBody }>("/v1/qa/check", async (request, reply) => {
+    const body = request.body as QaCheckBody;
     let auth: AuthClaims;
 
     try {
@@ -1591,7 +1593,7 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
       });
     }
 
-    if (request.body.tenantId !== auth.tenantId) {
+    if (body.tenantId !== auth.tenantId) {
       return reply.status(403).send({
         ok: false,
         message: "Tenant mismatch",
@@ -1607,8 +1609,8 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
       });
     }
 
-    const figmaUrl = request.body.figmaUrl.trim();
-    const pageUrl = request.body.pageUrl.trim();
+    const figmaUrl = body.figmaUrl.trim();
+    const pageUrl = body.pageUrl.trim();
 
     if (!figmaUrl) {
       return reply.status(400).send({
@@ -1655,11 +1657,11 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
     }
 
     const tenant = await upsertTenant(auth.tenantId);
-    const project = await upsertProject(tenant.id, request.body.projectId);
-    const capture = resolveDeviceCapture(request.body.viewport);
+    const project = await upsertProject(tenant.id, body.projectId);
+    const capture = resolveDeviceCapture(body.viewport);
     const tolerancePx =
-      typeof request.body.tolerancePx === "number" && Number.isFinite(request.body.tolerancePx)
-        ? request.body.tolerancePx
+      typeof body.tolerancePx === "number" && Number.isFinite(body.tolerancePx)
+        ? body.tolerancePx
         : resolveDefaultTolerance();
 
     try {
@@ -2220,6 +2222,7 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
   });
 
   app.post<{ Body: PageSnapshotExtractionBody }>("/v1/pages/snapshot", async (request, reply) => {
+    const body = request.body as PageSnapshotExtractionBody;
     let auth: AuthClaims;
 
     try {
@@ -2231,7 +2234,7 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
       });
     }
 
-    if (request.body.tenantId !== auth.tenantId) {
+    if (body.tenantId !== auth.tenantId) {
       return reply.status(403).send({
         ok: false,
         message: "Tenant mismatch",
@@ -2248,11 +2251,11 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
     }
 
     try {
-      const snapshot = await extractPageSnapshotFromUrl(request.body.pageUrl, {
-        tenantId: request.body.tenantId,
-        projectId: request.body.projectId,
-        schemaVersion: request.body.schemaVersion,
-        capture: request.body.capture,
+      const snapshot = await extractPageSnapshotFromUrl(body.pageUrl, {
+        tenantId: body.tenantId,
+        projectId: body.projectId,
+        schemaVersion: body.schemaVersion,
+        capture: body.capture,
       });
 
       const validation = validatePageSnapshot(snapshot);

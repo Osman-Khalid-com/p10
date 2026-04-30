@@ -4,6 +4,7 @@ import path from "node:path";
 import { chromium } from "playwright";
 import { fileURLToPath } from "node:url";
 import type { PageCaptureSettings, PageElementSnapshot, PageSnapshotPayload } from "@d2p/shared";
+import type { Element } from "domhandler";
 
 export interface PageSnapshotExtractionInput {
   tenantId: string;
@@ -159,7 +160,7 @@ function createNodeKey(state: NodeKeyState): string {
   return key;
 }
 
-function readAttr(element: cheerio.Element, name: string): string | null {
+function readAttr(element: Element, name: string): string | null {
   const value = element.attribs?.[name];
 
   return typeof value === "string" && value.trim() ? value.trim() : null;
@@ -236,7 +237,7 @@ async function resolveChromiumExecutablePath(): Promise<string | undefined> {
   return undefined;
 }
 
-function extractNode($: cheerio.CheerioAPI, element: cheerio.Element, state: NodeKeyState): PageElementSnapshot {
+function extractNode($: cheerio.CheerioAPI, element: Element, state: NodeKeyState): PageElementSnapshot {
   const tagName = element.tagName.toLowerCase();
   const styles = parseStyle($(element).attr("style"));
   const role = readAttr(element, "role");
@@ -272,7 +273,7 @@ export function extractPageSnapshotFromHtml(
   html: string,
   input: PageSnapshotExtractionInput
 ): PageSnapshotPayload {
-  const $ = cheerio.load(html, { decodeEntities: false });
+  const $ = cheerio.load(html);
   const state: NodeKeyState = { next: 1 };
   const bodyChildren = $("body")
     .children()
