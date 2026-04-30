@@ -1,4 +1,4 @@
-import { serializeComparisonReportToPdfBytes } from "@d2p/shared";
+import { serializeComparisonReportToPdfBytes } from "./pdf";
 import "./styles.css";
 
 type SessionContext = {
