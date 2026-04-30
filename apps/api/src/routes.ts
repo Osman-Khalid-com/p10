@@ -4,7 +4,6 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { compareDesignToPage, validateDesignSnapshot, validatePageSnapshot } from "@d2p/shared";
 import type {
-  ComparisonRequest,
   ComparisonResult,
   DesignSnapshotPayload,
   PageCaptureSettings,
@@ -1487,6 +1486,7 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
   );
 
   app.post<{ Body: DesignSnapshotPayload }>("/v1/design-snapshots", async (request, reply) => {
+    const body = request.body as DesignSnapshotPayload;
     let auth: AuthClaims;
 
     try {
@@ -1498,7 +1498,7 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
       });
     }
 
-    if (request.body.tenantId !== auth.tenantId) {
+    if (body.tenantId !== auth.tenantId) {
       return reply.status(403).send({
         ok: false,
         message: "Tenant mismatch",
@@ -1536,7 +1536,7 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
       }
     }
 
-    const result = validateDesignSnapshot(request.body);
+    const result = validateDesignSnapshot(body);
 
     if (!result.valid) {
       return reply.status(400).send({
@@ -1545,13 +1545,13 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
       });
     }
 
-    const storedSnapshot = await insertDesignSnapshot(request.body);
+    const storedSnapshot = await insertDesignSnapshot(body);
 
     return reply.status(201).send({
       ok: true,
       storedSnapshot,
-      snapshot: request.body,
-      comparison: createEmptyComparisonResult(request.body.tenantId, request.body.projectId),
+      snapshot: body,
+      comparison: createEmptyComparisonResult(body.tenantId, body.projectId),
     });
   });
 
@@ -1673,7 +1673,6 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
       const pageSnapshot = await extractPageSnapshotFromUrl(pageUrl, {
         tenantId: tenant.externalId,
         projectId: project.externalId,
-        pageUrl,
         capture,
       });
 
@@ -1741,6 +1740,7 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
   });
 
   app.post<{ Body: ComparisonRunBody }>("/v1/comparisons", async (request, reply) => {
+    const body = request.body as ComparisonRunBody;
     let auth: AuthClaims;
 
     try {
@@ -1752,7 +1752,7 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
       });
     }
 
-    if (request.body.tenantId !== auth.tenantId) {
+    if (body.tenantId !== auth.tenantId) {
       return reply.status(403).send({
         ok: false,
         message: "Tenant mismatch",
@@ -1768,8 +1768,8 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
       });
     }
 
-    const designValidation = validateDesignSnapshot(request.body.designSnapshot);
-    const pageValidation = validatePageSnapshot(request.body.pageSnapshot);
+    const designValidation = validateDesignSnapshot(body.designSnapshot);
+    const pageValidation = validatePageSnapshot(body.pageSnapshot);
 
     if (!designValidation.valid || !pageValidation.valid) {
       return reply.status(400).send({
@@ -1779,12 +1779,12 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
       });
     }
 
-    const tenant = await upsertTenant(request.body.tenantId);
-    const project = await upsertProject(tenant.id, request.body.projectId);
-    const tolerance = await resolveComparisonTolerance(tenant.id, request.body.tolerancePx);
+    const tenant = await upsertTenant(body.tenantId);
+    const project = await upsertProject(tenant.id, body.projectId);
+    const tolerance = await resolveComparisonTolerance(tenant.id, body.tolerancePx);
     const comparison: ComparisonResult = compareDesignToPage(
-      request.body.designSnapshot,
-      request.body.pageSnapshot,
+      body.designSnapshot,
+      body.pageSnapshot,
       tolerance.tolerancePx
     );
 
@@ -1804,8 +1804,8 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
     const storedComparison = await insertComparisonRun(
       tenant,
       project.id,
-      request.body.designSnapshot,
-      request.body.pageSnapshot,
+      body.designSnapshot,
+      body.pageSnapshot,
       comparison,
       tolerance.tolerancePx
     );
@@ -1815,8 +1815,8 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
       tenant.externalId,
       comparison,
       storedComparison,
-      request.body.designSnapshot,
-      request.body.pageSnapshot
+      body.designSnapshot,
+      body.pageSnapshot
     );
 
     await deliverComparisonCreatedWebhooks(tenant.id, createdEvent);
@@ -1827,8 +1827,8 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
         tenant.externalId,
         comparison,
         storedComparison,
-        request.body.designSnapshot,
-        request.body.pageSnapshot
+        body.designSnapshot,
+        body.pageSnapshot
       );
 
       await deliverComparisonFailedWebhooks(tenant.id, failedEvent);
@@ -1842,6 +1842,7 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
   });
 
   app.post<{ Body: IntegrationComparisonBody }>("/v1/integrations/comparisons", async (request, reply) => {
+    const body = request.body as IntegrationComparisonBody;
     const rawKey = request.headers["x-api-key"];
 
     if (typeof rawKey !== "string" || !rawKey.trim()) {
@@ -1889,8 +1890,8 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
       }
     }
 
-    const designValidation = validateDesignSnapshot(request.body.designSnapshot);
-    const pageValidation = validatePageSnapshot(request.body.pageSnapshot);
+    const designValidation = validateDesignSnapshot(body.designSnapshot);
+    const pageValidation = validatePageSnapshot(body.pageSnapshot);
 
     if (!designValidation.valid || !pageValidation.valid) {
       return reply.status(400).send({
@@ -1900,19 +1901,19 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
       });
     }
 
-    const tolerance = await resolveComparisonTolerance(tenant.id, request.body.tolerancePx);
+    const tolerance = await resolveComparisonTolerance(tenant.id, body.tolerancePx);
     const comparison: ComparisonResult = compareDesignToPage(
-      request.body.designSnapshot,
-      request.body.pageSnapshot,
+      body.designSnapshot,
+      body.pageSnapshot,
       tolerance.tolerancePx
     );
 
-    const project = await upsertProject(tenant.id, request.body.projectId);
+    const project = await upsertProject(tenant.id, body.projectId);
     const storedComparison = await insertComparisonRun(
       tenant,
       project.id,
-      request.body.designSnapshot,
-      request.body.pageSnapshot,
+      body.designSnapshot,
+      body.pageSnapshot,
       comparison,
       tolerance.tolerancePx
     );
@@ -1922,8 +1923,8 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
       tenant.externalId,
       comparison,
       storedComparison,
-      request.body.designSnapshot,
-      request.body.pageSnapshot
+      body.designSnapshot,
+      body.pageSnapshot
     );
 
     await deliverComparisonCreatedWebhooks(tenant.id, createdEvent);
@@ -1934,8 +1935,8 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
         tenant.externalId,
         comparison,
         storedComparison,
-        request.body.designSnapshot,
-        request.body.pageSnapshot
+        body.designSnapshot,
+        body.pageSnapshot
       );
 
       await deliverComparisonFailedWebhooks(tenant.id, failedEvent);
