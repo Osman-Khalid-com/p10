@@ -1,4 +1,4 @@
-import { getPool } from "../db.ts";
+import { getPool } from "../db";
 
 export interface ReleaseNote {
   version: string;
@@ -188,3 +188,4 @@ export async function setMaintenanceMessage(input: {
 
   return input.message;
 }
+

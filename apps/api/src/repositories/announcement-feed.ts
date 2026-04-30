@@ -1,4 +1,4 @@
-import { getPool } from "../db.ts";
+import { getPool } from "../db";
 
 export interface AnnouncementFeedItem {
   id: number;
@@ -126,3 +126,4 @@ export async function acknowledgeAnnouncement(
     unreadCount: feed.unreadCount,
   };
 }
+

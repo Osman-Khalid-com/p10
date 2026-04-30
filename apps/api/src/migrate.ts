@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { getPool } from "./db.ts";
+import { getPool } from "./db";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -27,3 +27,4 @@ void main().catch((error) => {
   console.error(error);
   process.exit(1);
 });
+

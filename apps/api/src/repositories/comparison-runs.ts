@@ -1,7 +1,7 @@
 import type { ComparisonReport, ComparisonResult, DesignSnapshotPayload, PageSnapshotPayload } from "@d2p/shared";
 import { buildComparisonReport } from "@d2p/shared";
-import { getPool } from "../db.ts";
-import type { StoredTenant } from "./design-snapshots.ts";
+import { getPool } from "../db";
+import type { StoredTenant } from "./design-snapshots";
 
 export interface StoredComparisonRun {
   id: number;
@@ -173,3 +173,4 @@ export async function getComparisonRunReportById(
     ),
   };
 }
+

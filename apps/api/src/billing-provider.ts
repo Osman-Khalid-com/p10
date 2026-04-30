@@ -1,5 +1,5 @@
 import { URLSearchParams } from "node:url";
-import type { TenantBillingInfo } from "./repositories/tenant-access.ts";
+import type { TenantBillingInfo } from "./repositories/tenant-access";
 
 export interface BillingActionResult {
   provider: string;
@@ -127,3 +127,4 @@ export async function createBillingPortalAction(
     message: payload.url ? "Billing portal created" : "Billing portal created without URL",
   };
 }
+

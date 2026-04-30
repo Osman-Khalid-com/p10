@@ -1,4 +1,4 @@
-import { getPool } from "../db.ts";
+import { getPool } from "../db";
 
 export interface TenantUsage {
   tenantId: number;
@@ -139,3 +139,4 @@ export function checkTenantUsageWithinLimits(usage: TenantUsage): { ok: boolean;
 
   return { ok: true };
 }
+

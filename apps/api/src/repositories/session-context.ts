@@ -1,4 +1,4 @@
-import { getPool } from "../db.ts";
+import { getPool } from "../db";
 
 export interface SessionFigmaFile {
   id: number;
@@ -97,3 +97,4 @@ export async function getSessionContext(
     projects: [...projectMap.values()],
   };
 }
+

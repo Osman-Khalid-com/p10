@@ -11,46 +11,46 @@ import type {
   PageSnapshotPayload,
   WebhookComparisonEventPayload,
 } from "@d2p/shared";
-import type { AuthClaims } from "./auth.ts";
-import { buildDesignSnapshotFromFigmaUrl, parseFigmaUrl } from "./figma.ts";
-import { createEmptyComparisonResult } from "./index.ts";
-import { createBillingCheckoutAction, createBillingPortalAction, resolveBillingProviderConfig } from "./billing-provider.ts";
-import { acknowledgeAnnouncement, listAnnouncementFeed, type AnnouncementFeedItem } from "./repositories/announcement-feed.ts";
-import { extractPageSnapshotFromUrl } from "./page-extraction.ts";
-import { userHasTenantAccess, userHasTenantRole } from "./repositories/access-control.ts";
+import type { AuthClaims } from "./auth";
+import { buildDesignSnapshotFromFigmaUrl, parseFigmaUrl } from "./figma";
+import { createEmptyComparisonResult } from "./index";
+import { createBillingCheckoutAction, createBillingPortalAction, resolveBillingProviderConfig } from "./billing-provider";
+import { acknowledgeAnnouncement, listAnnouncementFeed, type AnnouncementFeedItem } from "./repositories/announcement-feed";
+import { extractPageSnapshotFromUrl } from "./page-extraction";
+import { userHasTenantAccess, userHasTenantRole } from "./repositories/access-control";
 import {
   getDatabaseSnapshotCount,
   findProjectByExternalId,
   findTenantByExternalId,
   insertDesignSnapshot,
   upsertProject,
-} from "./repositories/design-snapshots.ts";
+} from "./repositories/design-snapshots";
 import {
   getComparisonRunById,
   getComparisonRunReportById,
   insertComparisonRun,
-} from "./repositories/comparison-runs.ts";
-import { addComparisonFeedback, listComparisonFeedback } from "./repositories/comparison-feedback.ts";
-import { getTenantComparisonTuning } from "./repositories/comparison-tuning.ts";
+} from "./repositories/comparison-runs";
+import { addComparisonFeedback, listComparisonFeedback } from "./repositories/comparison-feedback";
+import { getTenantComparisonTuning } from "./repositories/comparison-tuning";
 import {
   listComparisonIssueStatuses,
   upsertComparisonIssueStatus,
-} from "./repositories/comparison-issue-status.ts";
+} from "./repositories/comparison-issue-status";
 import {
   createReleaseNote,
   getLatestReleaseNote,
   getMaintenanceMessage,
   listReleaseNotes,
   setMaintenanceMessage,
-} from "./repositories/release-notes.ts";
-import { listComparisonHistory } from "./repositories/comparison-history.ts";
-import { getSessionContext } from "./repositories/session-context.ts";
-import { upsertMembership, upsertTenant, upsertUser } from "./repositories/provisioning.ts";
+} from "./repositories/release-notes";
+import { listComparisonHistory } from "./repositories/comparison-history";
+import { getSessionContext } from "./repositories/session-context";
+import { upsertMembership, upsertTenant, upsertUser } from "./repositories/provisioning";
 import {
   checkTenantUsageWithinLimits,
   getTenantUsage,
   resolveTenantPlanLimits,
-} from "./repositories/tenant-usage.ts";
+} from "./repositories/tenant-usage";
 import {
   createTenantApiKey,
   findTenantById,
@@ -59,7 +59,7 @@ import {
   listTenantApiKeys,
   revokeTenantApiKey,
   type TenantApiKeyRecord,
-} from "./repositories/tenant-access.ts";
+} from "./repositories/tenant-access";
 import {
   createTenantWebhook,
   deliverComparisonCreatedWebhooks,
@@ -69,7 +69,7 @@ import {
   listTenantWebhooks,
   redeliverTenantWebhookDelivery,
   revokeTenantWebhook,
-} from "./repositories/webhooks.ts";
+} from "./repositories/webhooks";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -2272,3 +2272,4 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
     }
   });
 }
+

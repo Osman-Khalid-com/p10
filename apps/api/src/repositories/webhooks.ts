@@ -1,6 +1,6 @@
-import { getPool } from "../db.ts";
+import { getPool } from "../db";
 import type { WebhookComparisonEventPayload, WebhookDeliveryEnvelope, WebhookEventType } from "@d2p/shared";
-import { signWebhookEnvelope } from "../../../../packages/shared/src/webhooks.ts";
+import { signWebhookEnvelope } from "../../../../packages/shared/src/webhooks";
 
 export interface TenantWebhookRecord {
   id: number;
@@ -571,3 +571,4 @@ export async function deliverComparisonFailedWebhooks(
     await deliverWebhookEvent(webhook, "comparison.failed", eventPayload);
   }
 }
+

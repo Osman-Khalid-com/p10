@@ -1,4 +1,4 @@
-import { getPool } from "../db.ts";
+import { getPool } from "../db";
 
 export interface TenantComparisonTuning {
   tenantId: number;
@@ -115,3 +115,4 @@ export async function getTenantComparisonTuning(tenantId: number): Promise<Tenan
     rationale: "no beta feedback yet",
   };
 }
+

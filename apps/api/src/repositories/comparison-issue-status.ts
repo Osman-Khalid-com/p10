@@ -1,4 +1,4 @@
-import { getPool } from "../db.ts";
+import { getPool } from "../db";
 
 export interface ComparisonIssueStatusRecord {
   id: number;
@@ -153,3 +153,4 @@ export async function upsertComparisonIssueStatus(input: {
     updatedAt: row.updated_at.toISOString(),
   };
 }
+

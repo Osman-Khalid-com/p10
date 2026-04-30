@@ -1,4 +1,4 @@
-import { buildApp } from "./app.ts";
+import { buildApp } from "./app";
 
 const port = Number(process.env.PORT ?? 3001);
 const host = process.env.HOST ?? "0.0.0.0";
@@ -15,3 +15,4 @@ async function main() {
 }
 
 void main();
+

@@ -1,5 +1,5 @@
 import type { DesignSnapshotPayload } from "@d2p/shared";
-import { getPool } from "../db.ts";
+import { getPool } from "../db";
 
 export interface StoredTenant {
   id: number;
@@ -226,3 +226,4 @@ export async function getDatabaseSnapshotCount(): Promise<number> {
   const result = await pool.query<{ count: string }>("SELECT COUNT(*)::text AS count FROM design_snapshots");
   return Number(result.rows[0]?.count ?? 0);
 }
+

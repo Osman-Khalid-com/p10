@@ -1,4 +1,4 @@
-import { getPool } from "../db.ts";
+import { getPool } from "../db";
 
 export interface ComparisonHistoryItem {
   id: number;
@@ -63,3 +63,4 @@ export async function listComparisonHistory(
     createdAt: row.created_at.toISOString(),
   }));
 }
+

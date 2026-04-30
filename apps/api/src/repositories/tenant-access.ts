@@ -1,5 +1,5 @@
 import crypto from "node:crypto";
-import { getPool } from "../db.ts";
+import { getPool } from "../db";
 
 export interface TenantBillingInfo {
   tenantId: number;
@@ -248,3 +248,4 @@ export async function resolveTenantApiKey(rawKey: string): Promise<TenantApiKeyR
     revokedAt: row.revoked_at ? row.revoked_at.toISOString() : null,
   };
 }
+

@@ -1,4 +1,4 @@
-import { getPool } from "../db.ts";
+import { getPool } from "../db";
 
 export async function upsertUser(externalId: string): Promise<{ id: number; externalId: string }> {
   const pool = getPool();
@@ -71,3 +71,4 @@ export async function upsertMembership(
     role: result.rows[0].role,
   };
 }
+

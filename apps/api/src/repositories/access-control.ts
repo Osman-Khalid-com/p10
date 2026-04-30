@@ -1,4 +1,4 @@
-import { getPool } from "../db.ts";
+import { getPool } from "../db";
 
 export async function userHasTenantAccess(userExternalId: string, tenantExternalId: string): Promise<boolean> {
   const pool = getPool();
@@ -48,3 +48,4 @@ export async function userHasTenantRole(
   const actualRole = await getTenantMembershipRole(userExternalId, tenantExternalId);
   return actualRole === role;
 }
+

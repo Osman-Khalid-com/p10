@@ -1,4 +1,4 @@
-import { getPool } from "../db.ts";
+import { getPool } from "../db";
 
 export interface ComparisonFeedbackRecord {
   id: number;
@@ -128,3 +128,4 @@ export async function listComparisonFeedback(
     createdAt: row.created_at.toISOString(),
   }));
 }
+
