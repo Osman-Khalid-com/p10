@@ -1,8 +1,8 @@
 import Fastify from "fastify";
 import cors from "@fastify/cors";
 import jwt from "@fastify/jwt";
-import { getJwtSecret } from "./auth.ts";
-import { registerRoutes } from "./routes.ts";
+import { getJwtSecret } from "./auth";
+import { registerRoutes } from "./routes";
 
 export async function buildApp() {
   const app = Fastify({
