@@ -92,7 +92,11 @@ interface ComparisonPreviewBody {
   tolerancePx?: number;
 }
 
-interface ComparisonRunBody extends ComparisonRequest {
+interface ComparisonRunBody {
+  tenantId: string;
+  projectId: string;
+  designSnapshot: DesignSnapshotPayload;
+  pageSnapshot: PageSnapshotPayload;
   tolerancePx?: number;
 }
 
