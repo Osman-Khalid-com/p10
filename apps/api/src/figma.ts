@@ -557,7 +557,7 @@ export function traverseNodes(node: FigmaNode, visit: (current: FigmaNode) => vo
 }
 
 export function normalizeNode(node: FigmaNode): DesignNode {
-  return convertNode(node);
+  return convertNode(node, new Map());
 }
 
 export async function buildDesignSnapshotFromFigmaUrl(input: {
